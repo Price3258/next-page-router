@@ -3,8 +3,8 @@ import React from "react";
 
 export default function ClientPage() {
   const clients = [
-    { id: 1, name: "max" },
-    { id: 2, name: "test" },
+    { id: "max", name: "max" },
+    { id: "test", name: "test" },
   ];
   return (
     <div>
