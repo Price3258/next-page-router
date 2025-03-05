@@ -5,8 +5,8 @@ const URL = process.env.NEXT_PUBLIC_FIREBASE_SALES_URL + "/sales.json";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export default function LastSalesPage() {
-  const [sales, setSales] = useState();
+export default function LastSalesPage(props) {
+  const [sales, setSales] = useState(props.sales);
   // const [isLoading, setIsLoading] = useState(false);
 
   const { data, error, isLoading } = useSWR(URL, fetcher);
@@ -51,7 +51,7 @@ export default function LastSalesPage() {
     return <p>Loading...</p>;
   }
 
-  if (!sales) {
+  if (!sales && !data) {
     return <p>No data yet...</p>; // 클라이언트 사이드에서 데이터를 가져오기 때문에 사전렌더링이 이걸로 됨. ( 데이터가 없으니까 )
   }
 
@@ -64,4 +64,24 @@ export default function LastSalesPage() {
       ))}
     </ul>
   );
+}
+
+export async function getStaticProps(context) {
+  const response = await fetch(URL);
+
+  const data = await response.json();
+  const transformedSales = [];
+  for (const key in data) {
+    transformedSales.push({
+      id: key,
+      username: data[key].username,
+      volume: data[key].volume,
+    });
+  }
+  return {
+    props: {
+      sales: transformedSales,
+    },
+    revalidate: 10,
+  };
 }
