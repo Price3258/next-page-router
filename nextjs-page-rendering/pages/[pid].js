@@ -4,9 +4,9 @@ import fs from "node:fs/promises";
 export default function ProductDetailPage(props) {
   const { product } = props;
 
-  //   if (!product) {
-  //     return <p>Loading...</p>;
-  //   }
+  if (!product) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
@@ -31,6 +31,12 @@ export async function getStaticProps(context) {
 
   const product = data.products.find((p) => p.id === productId);
 
+  if (!product) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       product,
@@ -46,6 +52,6 @@ export async function getStaticPaths() {
     paths: pathWithParams,
     // fallback: true, // 위에 로딩 추가가 필요.
     // fallback: "blocking", // 로딩없이 처리해줌.
-    fallback: false,
+    fallback: true,
   };
 }
