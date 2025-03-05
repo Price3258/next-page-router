@@ -2,7 +2,6 @@ import path from "path";
 import fs from "node:fs/promises";
 
 function HomePage(props) {
-  console.log(props);
   const { products } = props;
   const renderProducts = products.map((product) => (
     <li key={product.id}>{product.title}</li>
