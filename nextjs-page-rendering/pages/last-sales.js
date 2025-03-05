@@ -1,28 +1,51 @@
 import { useEffect, useState } from "react";
+import useSWR from "swr";
+
+const URL = process.env.NEXT_PUBLIC_FIREBASE_SALES_URL + "/sales.json";
+
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function LastSalesPage() {
   const [sales, setSales] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
-  const URL = process.env.NEXT_PUBLIC_FIREBASE_SALES_URL + "/sales.json";
+  const { data, error, isLoading } = useSWR(URL, fetcher);
 
   useEffect(() => {
-    setIsLoading(true);
-    fetch(URL)
-      .then((res) => res.json())
-      .then((data) => {
-        const transformedSales = [];
-        for (const key in data) {
-          transformedSales.push({
-            id: key,
-            username: data[key].username,
-            volume: data[key].volume,
-          });
-        }
-        setSales(transformedSales);
-        setIsLoading(false);
-      });
-  }, [URL]);
+    if (data) {
+      const transformedSales = [];
+      for (const key in data) {
+        transformedSales.push({
+          id: key,
+          username: data[key].username,
+          volume: data[key].volume,
+        });
+      }
+      setSales(transformedSales);
+    }
+  }, [data]);
+
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   fetch(URL)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       const transformedSales = [];
+  //       for (const key in data) {
+  //         transformedSales.push({
+  //           id: key,
+  //           username: data[key].username,
+  //           volume: data[key].volume,
+  //         });
+  //       }
+  //       setSales(transformedSales);
+  //       setIsLoading(false);
+  //     });
+  // }, [URL]);
+
+  if (error) {
+    return <p>Failed to load</p>;
+  }
 
   if (isLoading) {
     return <p>Loading...</p>;
