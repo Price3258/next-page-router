@@ -10,6 +10,7 @@ function HomePage(props) {
 }
 
 export async function getStaticProps() {
+  console.log("re-generating...");
   const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
 
   const readFile = await fs.readFile(filePath);
@@ -20,6 +21,7 @@ export async function getStaticProps() {
     props: {
       products: data.products,
     },
+    revalidate: 10,
   };
 }
 
