@@ -3,6 +3,11 @@ import fs from "node:fs/promises";
 
 export default function ProductDetailPage(props) {
   const { product } = props;
+
+  //   if (!product) {
+  //     return <p>Loading...</p>;
+  //   }
+
   return (
     <>
       <h1>{product.title}</h1>
@@ -31,12 +36,8 @@ export async function getStaticProps(context) {
 
 export async function getStaticPaths() {
   return {
-    paths: [
-      { params: { pid: "p1" } },
-      { params: { pid: "p2" } },
-      { params: { pid: "p3" } },
-      { params: { pid: "p4" } },
-    ],
-    fallback: false,
+    paths: [{ params: { pid: "p1" } }, { params: { pid: "p4" } }],
+    // fallback: true, // 위에 로딩 추가가 필요.
+    fallback: "blocking", // 로딩없이 처리해줌.
   };
 }
