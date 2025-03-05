@@ -16,14 +16,18 @@ export default function ProductDetailPage(props) {
   );
 }
 
+async function getData() {
+  const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
+  const readFile = await fs.readFile(filePath);
+  const data = JSON.parse(readFile);
+  return data;
+}
+
 export async function getStaticProps(context) {
   const { params } = context;
 
   const productId = params.pid;
-
-  const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
-  const readFile = await fs.readFile(filePath);
-  const data = JSON.parse(readFile);
+  const data = await getData();
 
   const product = data.products.find((p) => p.id === productId);
 
@@ -35,9 +39,13 @@ export async function getStaticProps(context) {
 }
 
 export async function getStaticPaths() {
+  const data = await getData();
+  const ids = data.products.map((p) => p.id);
+  const pathWithParams = ids.map((id) => ({ params: { pid: id } }));
   return {
-    paths: [{ params: { pid: "p1" } }, { params: { pid: "p4" } }],
+    paths: pathWithParams,
     // fallback: true, // 위에 로딩 추가가 필요.
-    fallback: "blocking", // 로딩없이 처리해줌.
+    // fallback: "blocking", // 로딩없이 처리해줌.
+    fallback: false,
   };
 }
