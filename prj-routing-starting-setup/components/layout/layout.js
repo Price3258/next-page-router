@@ -7,14 +7,17 @@ export default function Layout({ children }) {
   const notificationCtx = useContext(NotificationContext);
 
   const activeNotification = notificationCtx.notification;
-  const { title, message, status } = activeNotification;
 
   return (
     <>
       <MainHeader />
       <main>{children}</main>
       {activeNotification && (
-        <Notification title={title} message={message} status={status} />
+        <Notification
+          title={activeNotification.title}
+          message={activeNotification.message}
+          status={activeNotification.status}
+        />
       )}
     </>
   );
