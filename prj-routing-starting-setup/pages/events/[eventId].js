@@ -4,16 +4,16 @@ import EventSummary from "@/components/event-detail/event-summary";
 import EventLogistics from "@/components/event-detail/event-logistics";
 import EventContent from "@/components/event-detail/event-content";
 import ErrorAlert from "@/components/ui/error-alert";
-import { getAllEvents, getEventById } from "@/helpers/api-util";
+import { getEventById, getFeaturedEvents } from "@/helpers/api-util";
 
 export default function EventDetailPage(props) {
   const { selectedEvent } = props;
 
   if (!selectedEvent) {
     return (
-      <ErrorAlert>
-        <p>No event found!</p>
-      </ErrorAlert>
+      <div className="center">
+        <p>Loading...</p>
+      </div>
     );
   }
 
@@ -41,16 +41,17 @@ export async function getStaticProps(context) {
     props: {
       selectedEvent,
     },
+    revalidate: 30,
   };
 }
 
 export async function getStaticPaths() {
-  const events = await getAllEvents();
+  const events = await getFeaturedEvents();
   const pathWithParams = events.map((event) => ({
     params: { eventId: event.id },
   }));
   return {
     paths: pathWithParams,
-    fallback: false,
+    fallback: true, // blocking으로 해도됨 블로킹은 만들어질때까지 기다리는것. 즉 위에 로딩이 안뜸.
   };
 }
