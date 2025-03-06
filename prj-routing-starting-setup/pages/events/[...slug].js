@@ -7,6 +7,7 @@ import ResultsTitle from "@/components/events/results-title";
 import Button from "@/components/ui/button";
 import ErrorAlert from "@/components/ui/error-alert";
 import { BASE_URL } from "@/lib/constant";
+import Head from "next/head";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -88,6 +89,13 @@ export default function FilteredEventsPage() {
 
   return (
     <div>
+      <Head>
+        <title>Filtered Events</title>
+        <meta
+          name="description"
+          content={`All events for ${numMonth}/${numYear}`}
+        />
+      </Head>
       <ResultsTitle date={formattedDate} />
       <EventList items={filteredEvents} />
     </div>
