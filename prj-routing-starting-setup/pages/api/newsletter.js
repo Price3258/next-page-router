@@ -1,4 +1,4 @@
-import { MONGO_DB_CLIENT } from "@/lib/constant";
+import { getMongoDBClient } from "@/lib/db";
 import { MongoClient } from "mongodb";
 
 async function handler(req, res) {
@@ -10,7 +10,7 @@ async function handler(req, res) {
     }
     console.log(userEmail);
 
-    const client = await MongoClient.connect(MONGO_DB_CLIENT);
+    const client = await MongoClient.connect(getMongoDBClient("newsletter"));
     const db = client.db();
     await db.collection("emails").insertOne({ email: userEmail });
 

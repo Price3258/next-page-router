@@ -1,4 +1,7 @@
-function handler(req, res) {
+import { getMongoDBClient } from "@/lib/db";
+import { MongoClient } from "mongodb";
+
+async function handler(req, res) {
   const eventId = req.query.eventId;
 
   if (req.method === "POST") {
@@ -15,11 +18,17 @@ function handler(req, res) {
     }
 
     const newComment = {
-      id: new Date().toISOString(),
       email,
       text,
       name,
+      eventId,
     };
+    const dbClient = getMongoDBClient("events");
+    const client = await MongoClient.connect(dbClient);
+    const db = client.db();
+    const result = await db.collection("comments").insertOne(newComment);
+
+    console.log(result);
 
     res.status(201).json({
       message: "Added comment",
