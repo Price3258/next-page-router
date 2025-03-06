@@ -23,6 +23,7 @@ async function handler(req, res) {
       name,
       eventId,
     };
+
     const dbClient = getMongoDBClient("events");
     const client = await MongoClient.connect(dbClient);
     const db = client.db();
@@ -36,11 +37,15 @@ async function handler(req, res) {
     });
   }
   if (req.method === "GET") {
-    const dummyList = [
-      { id: "c1", name: "max", text: "A first comment" },
-      { id: "c2", name: "test", text: "A second comment" },
-    ];
-    res.status(200).json({ message: "get Message", comments: dummyList });
+    const dbClient = getMongoDBClient("events");
+    const client = await MongoClient.connect(dbClient);
+    const db = client.db();
+    const documents = await db
+      .collection("comments")
+      .find()
+      .sort({ _id: -1 })
+      .toArray();
+    res.status(200).json({ message: "get Message", comments: documents });
   }
 }
 
