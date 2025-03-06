@@ -18,6 +18,8 @@ export default function FilteredEventsPage() {
 
   const { data, error } = useSWR(BASE_URL + "/events.json", fetcher);
 
+  let pageHeadData;
+
   useEffect(() => {
     if (data) {
       const events = [];
@@ -33,7 +35,12 @@ export default function FilteredEventsPage() {
   }, [data]);
 
   if (!loadedEvents) {
-    return <p className="center">Loading...</p>;
+    return (
+      <>
+        {pageHeadData}
+        <p className="center">Loading...</p>
+      </>
+    );
   }
 
   const filteredYear = filterData[0];
@@ -41,6 +48,16 @@ export default function FilteredEventsPage() {
 
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
+
+  pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta
+        name="description"
+        content={`All events for ${numMonth}/${numYear}`}
+      />
+    </Head>
+  );
 
   if (
     isNaN(numYear) ||
@@ -53,6 +70,7 @@ export default function FilteredEventsPage() {
   ) {
     return (
       <>
+        {pageHeadData}
         <ErrorAlert>
           <p>invalid filter!</p>
         </ErrorAlert>
@@ -77,6 +95,7 @@ export default function FilteredEventsPage() {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <>
+        {pageHeadData}
         <ErrorAlert>
           <p>No events found for the chosen filter!</p>
         </ErrorAlert>
@@ -89,13 +108,7 @@ export default function FilteredEventsPage() {
 
   return (
     <div>
-      <Head>
-        <title>Filtered Events</title>
-        <meta
-          name="description"
-          content={`All events for ${numMonth}/${numYear}`}
-        />
-      </Head>
+      {pageHeadData}
       <ResultsTitle date={formattedDate} />
       <EventList items={filteredEvents} />
     </div>
