@@ -28,6 +28,7 @@ async function handler(req, res) {
     const client = await MongoClient.connect(dbClient);
     const db = client.db();
     const result = await db.collection("comments").insertOne(newComment);
+    client.close();
 
     console.log(result);
 
@@ -45,6 +46,8 @@ async function handler(req, res) {
       .find()
       .sort({ _id: -1 })
       .toArray();
+    client.close();
+
     res.status(200).json({ message: "get Message", comments: documents });
   }
 }
