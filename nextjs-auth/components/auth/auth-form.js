@@ -9,7 +9,7 @@ async function createUser({ email, password }) {
       "Content-Type": "application/json",
     },
   });
-  const data = response.json();
+  const data = await response.json();
   if (!response.ok) {
     throw new Error(data.message || "Something went wrong");
   }
