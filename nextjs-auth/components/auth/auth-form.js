@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import classes from "./auth-form.module.css";
 
@@ -22,6 +23,7 @@ function AuthForm() {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const [isLogin, setIsLogin] = useState(true);
+  const router = useRouter();
 
   function switchAuthModeHandler() {
     setIsLogin((prevState) => !prevState);
@@ -40,9 +42,9 @@ function AuthForm() {
         password: enteredPassword,
         redirect: false, // true로 설정하면 자동 리디렉트됨
       });
-      console.log(result);
       if (!result.error) {
         // set some auth state
+        router.replace("/profile");
       }
     } else {
       try {
