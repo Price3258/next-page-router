@@ -8,10 +8,6 @@ function MainNavigation() {
 
   const loading = status === "loading";
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
   function logoutHandler() {
     signOut();
   }
