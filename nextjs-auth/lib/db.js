@@ -1,8 +1,7 @@
 import { MongoClient } from "mongodb";
-import { MONGODB_URL } from "./constant";
 
-export async function connectToDatabase() {
-  const client = await MongoClient(MONGODB_URL);
+export async function connectToDatabase(url) {
+  const client = await MongoClient.connect(url);
 
   return client;
 }

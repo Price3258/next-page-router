@@ -1,4 +1,5 @@
 import { hashPassword } from "@/lib/auth";
+import { MONGODB_URL } from "@/lib/constant";
 import { connectToDatabase } from "@/lib/db";
 
 async function handler(req, res) {
@@ -23,7 +24,7 @@ async function handler(req, res) {
     return;
   }
 
-  const client = await connectToDatabase();
+  const client = await connectToDatabase(MONGODB_URL);
 
   const db = client.db();
 
